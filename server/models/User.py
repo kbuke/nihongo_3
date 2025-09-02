@@ -48,7 +48,20 @@ class UserModel(db.Model, SerializerMixin):
         return value
     
     # set up polymorphic identities
-    # __mapper_args__ = {
-    #     "polymorphic_identity": "user",
-    #     "polymorphic_on": ac_type
-    # }
+    __mapper_args__ = {
+        "polymorphic_identity": "user",
+        "polymorphic_on": ac_type
+    }
+
+class AdminModel(UserModel):
+    __tablename__ = "admins"
+
+    id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    nationality = db.Column(db.String, nullable=True)
+
+    __mapper_args__ = {
+        "polymorphic_identity": "Admin"
+    }
+
+
