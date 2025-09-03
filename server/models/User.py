@@ -104,8 +104,13 @@ class BusinessModel(UserModel):
     # Set up relationship with business types
     industry = db.relationship("IndustryModel", back_populates="business", secondary="business_industries")
 
+    # Set up relationship with business hours
+    hours = db.relationship("BusinessHoursModel", back_populates="business")
+
     serialize_rules = (
         "-industry.business",
+
+        "-hours.business",
     )
     
     __mapper_args__ = {

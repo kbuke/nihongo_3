@@ -2,18 +2,41 @@ from sqlalchemy_serializer import SerializerMixin
 from config import db 
 from datetime import time, datetime
 from sqlalchemy.orm import validates
+from sqlalchemy.exc import IntegrityError
 
 class BusinessHoursModel(db.Model, SerializerMixin):
     __tablename__ = "business_hours"
 
     id = db.Column(db.Integer, primary_key=True)
 
+    business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=False)
+    business = db.relationship("BusinessModel", back_populates="hours")
+
     applies_to = db.Column(db.String, nullable = False)
+    # validate applies_to
+    @validates("business_id", "applies_to")
+    def validate_business_info(self, key, value):
+        if key == "applies_to":
+            allowed_values = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            if value not in allowed_values:
+                raise ValueError(f"{value} is not a day of the week.")
+            
+        business_id = value if key == "business_id" else self.business_id
+        applies_to = value if key == "applies_to" else self.applies_to
+
+        if business_id is not None and applies_to is not None:
+            existing = BusinessHoursModel.query.filter_by(
+                business_id=business_id,
+                applies_to=applies_to
+            ).first()
+            if existing and existing.id != self.id:
+                raise ValueError(f"Business {business_id} already has hours defined for {applies_to}")
+        return value
 
     opening_time = db.Column(db.Time, nullable = False)
     closing_time = db.Column(db.Time, nullable = False)
     closes_next_day = db.Column(db.Boolean, nullable = False)
-
+    # validate businesses times
     @validates("opening_time", "closing_time", "closes_next_day")
     def validate_hours(self, key, value):
         if key in ("opening_time", "closing_time") and isinstance(value, str):

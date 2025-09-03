@@ -6,7 +6,7 @@ from resources.Industry import IndustryList, Industry
 
 from resources.BusinessIndustry import BusinessIndustryList
 
-from resources.BusinessHours import BusinessHoursList
+from resources.BusinessHours import BusinessHoursList, BusinessHour
 
 api.add_resource(UserList, "/users")
 api.add_resource(User, "/users/<int:id>")
@@ -18,6 +18,7 @@ api.add_resource(Industry, "/industries/<int:id>")
 api.add_resource(BusinessIndustryList, "/businessindustires")
 
 api.add_resource(BusinessHoursList, "/businesshours")
+api.add_resource(BusinessHour, "/businesshours/<int:id>")
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
