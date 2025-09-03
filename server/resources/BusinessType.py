@@ -19,4 +19,14 @@ class BusinessTypeList(Resource):
                 return {"message": f"Business type: {new_type} created."}
             except ValueError as e:
                 return {"error": [str(e)]}
+
+class Business(Resource):
+    def delete(self, id):
+        business = BusinessTypeModel.query.filter(BusinessTypeModel.id==id).first()
+        if business:
+            db.session.delete(business)
+            db.session.commit()
+            return {"message": f"Business type {id} deleted."}
+        else:
+            return {"error": f"Business type {id} not found"}, 404
         
