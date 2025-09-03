@@ -64,4 +64,13 @@ class AdminModel(UserModel):
         "polymorphic_identity": "Admin"
     }
 
+class TravelerModel(UserModel):
+    __tablename__ = "travelers"
 
+    id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    nationality = db.Column(db.String, nullable=True)
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "Traveler"
+    }

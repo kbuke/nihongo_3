@@ -1,4 +1,4 @@
-from models.User import UserModel, AdminModel
+from models.User import UserModel, AdminModel, TravelerModel
 from flask import request, make_response, session
 from flask_restful import Resource
 from config import db
@@ -24,6 +24,20 @@ class UserList(Resource):
                     db.session.add(new_user)
                     db.session.commit()
                     return {"message": "Created account!"}
+                elif ac_type == "Traveler":
+                    breakpoint()
+                    new_traveler = TravelerModel(
+                        email = json.get("email"),
+                        picture = json.get("picture"),
+                        intro = json.get("intro"),
+                        ac_type = ac_type,
+                        name = json.get("name"),
+                        nationality = json.get("nationality")
+                    )
+                    new_traveler.password_hash=json.get("newPassword")
+                    db.session.add(new_traveler)
+                    db.session.commit()
+                    return {"message": "New traveler added"}
             except ValueError as e:
                 return {"error": [str(e)]}
         else:
