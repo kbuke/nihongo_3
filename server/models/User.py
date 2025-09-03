@@ -74,3 +74,34 @@ class TravelerModel(UserModel):
     __mapper_args__ = {
         "polymorphic_identity": "Traveler"
     }
+
+class BusinessModel(UserModel):
+    __tablename__ = "businesses"
+
+    id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    business_name = db.Column(db.String, nullable=False)
+    open_24hr = db.Column(db.Boolean, nullable=False, default=False)
+    allow_email = db.Column(db.Boolean, nullable=False, default=False)
+
+    # address details
+    chome = db.Column(db.Integer, nullable=True)
+    block = db.Column(db.Integer, nullable=True)
+    building_number = db.Column(db.Integer, nullable=True)
+    building_name = db.Column(db.String, nullable=True)
+    floor = db.Column(db.String, nullable=True)
+    room = db.Column(db.String, nullable=True)
+
+    post_code = db.Column(db.String, nullable=False)
+
+    # Japanese postcodes are always 7 chars long
+    # Create validation
+    @validates("post_code")
+    def validate_post_code(self, key, value):
+        post_code_pattern = re.compile(r"^\d{3}-?\d{4}$")
+        if not post_code_pattern.match(value):
+            raise ValueError("Invalid Japanese post code. Must be of type xxx-xxxx or xxxxxxx")
+        return value
+    
+    __mapper_args__ = {
+        "polymorphic_identity": "Business"
+    }

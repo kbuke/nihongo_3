@@ -1,4 +1,4 @@
-from models.User import UserModel, AdminModel, TravelerModel
+from models.User import UserModel, AdminModel, TravelerModel, BusinessModel
 from flask import request, make_response, session
 from flask_restful import Resource
 from config import db
@@ -16,7 +16,7 @@ class UserList(Resource):
                         email = json.get("email"),
                         picture = json.get("profilePicture"),
                         intro = json.get("intro"),
-                        ac_type = json.get("acType"),
+                        ac_type = ac_type,
                         name = json.get("name"),
                         nationality = json.get("nationality")
                     )
@@ -24,8 +24,8 @@ class UserList(Resource):
                     db.session.add(new_user)
                     db.session.commit()
                     return {"message": "Created account!"}
+                
                 elif ac_type == "Traveler":
-                    breakpoint()
                     new_traveler = TravelerModel(
                         email = json.get("email"),
                         picture = json.get("picture"),
@@ -38,6 +38,30 @@ class UserList(Resource):
                     db.session.add(new_traveler)
                     db.session.commit()
                     return {"message": "New traveler added"}
+                
+                elif ac_type == "Business":
+                    breakpoint()
+                    new_business = BusinessModel(
+                        email = json.get("email"),
+                        picture = json.get("picture"),
+                        intro = json.get("intro"),
+                        ac_type = ac_type,
+                        business_name = json.get("businessName"),
+                        open_24hr = json.get("24hr"),
+                        allow_email = json.get("allowEmail"),
+                        chome = json.get("chome"),
+                        block = json.get("block"),
+                        building_number = json.get("buildingNumber"),
+                        building_name = json.get("buildingName"),
+                        floor = json.get("floor"),
+                        room = json.get("room"),
+                        post_code = json.get("postCode")
+                    )
+                    new_business.password_hash=json.get("newPassword")
+                    db.session.add(new_business)
+                    db.session.commit()
+                    return {"message": "New business added"}
+                
             except ValueError as e:
                 return {"error": [str(e)]}
         else:
