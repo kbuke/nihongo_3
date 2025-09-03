@@ -29,3 +29,5 @@ class BusinessIndustryModel(db.Model, SerializerMixin):
             return industry
         else:
             raise ValueError(f"Industry {value} does not exist")
+        
+    # ensure that the pairing of business and indusrty doesnt already exist
