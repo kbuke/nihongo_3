@@ -1,16 +1,16 @@
-from models.BusinessType import BusinessTypeModel
+from models.Industry import IndustryModel
 from config import db 
 
 from flask_restful import Resource
 from flask import make_response, session, request
 
-class BusinessTypeList(Resource):
+class IndustryList(Resource):
     def post(self):
         json = request.get_json()
         new_type = json.get("businessType")
         if json:
             try:
-                new_type = BusinessTypeModel(
+                new_type = IndustryModel(
                     type = new_type,
                     img = json.get("businessTypeImg")
                 )
@@ -20,9 +20,9 @@ class BusinessTypeList(Resource):
             except ValueError as e:
                 return {"error": [str(e)]}
 
-class Business(Resource):
+class Industry(Resource):
     def delete(self, id):
-        business = BusinessTypeModel.query.filter(BusinessTypeModel.id==id).first()
+        business = IndustryModel.query.filter(IndustryModel.id==id).first()
         if business:
             db.session.delete(business)
             db.session.commit()

@@ -76,3 +76,8 @@ class User(Resource):
             return {"message": f"User {id} deleted!"}
         else:
             return {"error": f"User {id} not found"}, 404
+        
+class BusinessList(Resource):
+    def get(self):
+        businesses = [business.to_dict() for business in BusinessModel.query.all()]
+        return businesses, 201

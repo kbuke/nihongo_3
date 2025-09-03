@@ -92,7 +92,6 @@ class BusinessModel(UserModel):
     room = db.Column(db.String, nullable=True)
 
     post_code = db.Column(db.String, nullable=False)
-
     # Japanese postcodes are always 7 chars long
     # Create validation
     @validates("post_code")
@@ -101,6 +100,13 @@ class BusinessModel(UserModel):
         if not post_code_pattern.match(value):
             raise ValueError("Invalid Japanese post code. Must be of type xxx-xxxx or xxxxxxx")
         return value
+
+    # Set up relationship with business types
+    industry = db.relationship("IndustryModel", back_populates="business", secondary="business_industries")
+
+    serialize_rules = (
+        "-industry.business",
+    )
     
     __mapper_args__ = {
         "polymorphic_identity": "Business"
