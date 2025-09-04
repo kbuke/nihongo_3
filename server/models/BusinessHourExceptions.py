@@ -27,17 +27,27 @@ class BusinessHourExceptionsModel(db.Model, SerializerMixin):
 
     # Add validation
         # ensure date format is correct
-    @validates("date")
+    @validates("date", "business_id")
     def validate_exception_date(self, key, value):
-        if isinstance(value, date):
-            return value 
-        else:
-            try:
-                value = datetime.strptime(value, "%Y-%M-%d").date()
-                return value
-            except ValueError:
-                raise ValueError("Could not convert input for date into date format.")
+        specific_date = value if key == "date" else self.date 
+        business_id = value if key == "business_id" else self.business_id
 
+        if key in ("date"):
+            if isinstance(value, date):
+                return value
+            try:
+                return datetime.strptime(value, "%Y-%M-%d").date()
+            except (ValueError, TypeError):
+                raise ValueError("Date must be in date format YYYY-MM-DD")
+            
+        if business_id is not None and specific_date is not None:
+            existing = BusinessHourExceptionsModel.query.filter_by(
+                business_id = business_id,
+                date = specific_date
+            ).first()
+            if existing and existing.id != self.id:
+                raise ValueError(f"Business {business_id} already has hours set for {specific_date}")
+        return value
 
         # if is_closed is true then Business Time variables do not need values
         # if is_closed is false then Business Times will need values with following logic
