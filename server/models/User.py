@@ -107,10 +107,15 @@ class BusinessModel(UserModel):
     # Set up relationship with business hours
     hours = db.relationship("BusinessHoursModel", back_populates="business")
 
+    # Set up relationship with business hours exceptions
+    hour_exceptions = db.relationship("BusinessHourExceptionsModel", back_populates="business")
+
     serialize_rules = (
         "-industry.business",
 
         "-hours.business",
+
+        "-hour_exceptions.business"
     )
     
     __mapper_args__ = {

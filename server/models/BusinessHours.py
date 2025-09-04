@@ -11,12 +11,20 @@ class BusinessHoursModel(db.Model, SerializerMixin):
 
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"), nullable=False)
     business = db.relationship("BusinessModel", back_populates="hours")
+    opening_time = db.Column(db.Time, nullable = False)
+    closing_time = db.Column(db.Time, nullable = False)
+    closes_next_day = db.Column(db.Boolean, nullable = False)
 
     applies_to = db.Column(db.String, nullable = False)
+    
     # validate applies_to
     @validates("business_id", "applies_to")
     def validate_business_info(self, key, value):
         if key == "applies_to":
+            # Look at making validations for if the business has
+                # same operating hours every day
+                # same operating hours every week day
+                # same operating hours every weekend 
             allowed_values = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             if value not in allowed_values:
                 raise ValueError(f"{value} is not a day of the week.")
@@ -33,9 +41,7 @@ class BusinessHoursModel(db.Model, SerializerMixin):
                 raise ValueError(f"Business {business_id} already has hours defined for {applies_to}")
         return value
 
-    opening_time = db.Column(db.Time, nullable = False)
-    closing_time = db.Column(db.Time, nullable = False)
-    closes_next_day = db.Column(db.Boolean, nullable = False)
+    
     # validate businesses times
     @validates("opening_time", "closing_time", "closes_next_day")
     def validate_hours(self, key, value):

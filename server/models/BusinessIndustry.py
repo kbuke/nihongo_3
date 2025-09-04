@@ -26,8 +26,8 @@ class BusinessIndustryModel(db.Model, SerializerMixin):
     def validate_industry(self, key, value):
         industry = IndustryModel.query.filter(IndustryModel.id==value).first()
         if industry:
-            return industry
+            return industry.id
         else:
             raise ValueError(f"Industry {value} does not exist")
         
-    # ensure that the pairing of business and indusrty doesnt already exist
+    # ensure that the pairing of business and industry doesnt already exist
