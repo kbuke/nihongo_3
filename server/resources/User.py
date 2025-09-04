@@ -4,6 +4,15 @@ from flask_restful import Resource
 from config import db
 
 class UserList(Resource):
+    # Get all users
+    def get(self):
+        users = [user.to_dict(rules = (
+            "-_password_hash",
+            "-hour_exceptions",
+            "-hours",
+        )) for user in UserModel.query.all()]
+        return users
+
     # Create a new user
     def post(self):
         json = request.get_json()
@@ -68,6 +77,14 @@ class UserList(Resource):
             return {"error": "Failed to add new user"}
 
 class User(Resource):
+    # Get specific user
+    def get(self, id):
+        user = UserModel.query.filter(UserModel.id==id).first()
+        if user:
+            return user.to_dict(), 201
+        else:
+            return{"error": f"User {id} not found"}
+
     def delete(self, id):
         user = UserModel.query.filter(UserModel.id==id).first()
         if user:
