@@ -84,6 +84,23 @@ class User(Resource):
             return user.to_dict(), 201
         else:
             return{"error": f"User {id} not found"}
+    
+    # PATCH specific user info
+    def patch(self, id):
+        data = request.get_json()
+
+        user = UserModel.query.filter(UserModel.id==id).first()
+        if user:
+            try:
+                for attr in data:
+                    setattr(user, attr, data[attr])
+                db.session.add(user)
+                db.session.commit()
+                return {"message": f"User {id} updated."}
+            except ValueError as e:
+                return {"error": [str(e)]}
+        else:
+            return{"error": "Message not found"}
 
     def delete(self, id):
         user = UserModel.query.filter(UserModel.id==id).first()
