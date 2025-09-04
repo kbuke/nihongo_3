@@ -36,7 +36,7 @@ class BusinessHourExceptionsModel(db.Model, SerializerMixin):
             if isinstance(value, date):
                 return value
             try:
-                return datetime.strptime(value, "%Y-%M-%d").date()
+                return datetime.strptime(value, "%Y-%m-%d").date()
             except (ValueError, TypeError):
                 raise ValueError("Date must be in date format YYYY-MM-DD")
             
@@ -93,6 +93,10 @@ class BusinessHourExceptionsModel(db.Model, SerializerMixin):
                     
         else:
             raise ValueError("is_closed must be explicitly true or false")
+
+    __table_args__ = (
+        db.UniqueConstraint("business_id", "date", name="unique_business_date"),
+    )
 
 
         

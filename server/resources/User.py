@@ -49,7 +49,6 @@ class UserList(Resource):
                     return {"message": "New traveler added"}
                 
                 elif ac_type == "Business":
-                    breakpoint()
                     new_business = BusinessModel(
                         email = json.get("email"),
                         picture = json.get("picture"),
