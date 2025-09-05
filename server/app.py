@@ -10,7 +10,7 @@ from resources.BusinessHours import BusinessHoursList, BusinessHour
 
 from resources.BusinessHourException import BusinessHourExceptionList, BusinessHourException
 
-from resources.Prefectures import PrefectureList
+from resources.Prefectures import PrefectureList, Prefecture
 
 api.add_resource(UserList, "/users")
 api.add_resource(User, "/users/<int:id>")
@@ -29,6 +29,7 @@ api.add_resource(BusinessHourExceptionList, "/businesshoursexceptions")
 api.add_resource(BusinessHourException, "/businesshoursexceptions/<int:id>")
 
 api.add_resource(PrefectureList, "/prefectures")
+api.add_resource(Prefecture, "/prefectures/<int:id>")
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)

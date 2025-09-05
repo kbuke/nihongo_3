@@ -22,4 +22,20 @@ class PrefectureList(Resource):
                 return {"message": f"Prefecture created."}
             except ValueError as e:
                 return {"error": [str(e)]}
-        
+
+class Prefecture(Resource):
+    def patch(self, id):
+        data = request.get_json()
+        prefecture = PrefectureModel.query.filter(PrefectureModel.id==id).first()
+        if prefecture:
+            try:
+                for attr in data:
+                    setattr(prefecture, attr, data[attr])
+                db.session.add(prefecture)
+                db.session.commit()
+                return {"message": f"Prefecture {id} info updated."}
+            except ValueError as e:
+                return {"error": [str(e)]}
+        else:
+            return {"error": f"Prefecture {id} not found."}, 404
+
