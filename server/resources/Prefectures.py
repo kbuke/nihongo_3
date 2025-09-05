@@ -5,7 +5,13 @@ from config import db
 
 from models.Prefecture import PrefectureModel
 
+from sqlalchemy.exc import IntegrityError
+
 class PrefectureList(Resource):
+    def get(self):
+        prefectures = [prefecture.to_dict() for prefecture in PrefectureModel.query.all()]
+        return prefectures
+
     def post(self):
         json = request.get_json()
 
@@ -35,7 +41,8 @@ class Prefecture(Resource):
                 db.session.commit()
                 return {"message": f"Prefecture {id} info updated."}
             except ValueError as e:
-                return {"error": [str(e)]}
+                db.session.rollback()
+                return {"error": [str(e)]}, 400
         else:
             return {"error": f"Prefecture {id} not found."}, 404
 

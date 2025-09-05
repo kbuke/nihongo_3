@@ -110,12 +110,39 @@ class BusinessModel(UserModel):
     # Set up relationship with business hours exceptions
     hour_exceptions = db.relationship("BusinessHourExceptionsModel", back_populates="business")
 
+    # set up relationship with prefecture
+    prefecture_id = db.Column(db.ForeignKey("prefectures.id"))
+    prefecture = db.relationship("PrefectureModel", back_populates="businesses")
+
+    # set up relationship with city
+    city_id = db.Column(db.ForeignKey("cities.id"))
+    city = db.relationship("CitiesModel", back_populates="businesses")
+
+    # set up relationship with neighbourhood
+    neighbourhood_id = db.Column(db.ForeignKey("neighbourhoods.id"))
+    neighbourhood = db.relationship("NeighbourhoodModel", back_populates="businesses")
+
+    # handle serialization
+    def handle_business_prefecture(*attributes):
+        return tuple(f"-prefecture.{attr}" for attr in attributes)
+    
+    def handle_business_city(*attributes):
+        return tuple(f"-city.{attr}" for attr in attributes)
+
     serialize_rules = (
         "-industry.business",
 
         "-hours.business",
 
-        "-hour_exceptions.business"
+        "-hour_exceptions.business",
+
+        "-city.businesses",
+        "-city.prefecture",
+
+        *handle_business_prefecture("businesses", "cities", "prefecture_intro"),
+
+        *handle_business_city("population", "prefecture_capital", "capital_city", "city_intro"),
+
     )
     
     __mapper_args__ = {

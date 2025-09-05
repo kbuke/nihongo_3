@@ -63,7 +63,8 @@ class UserList(Resource):
                         building_name = json.get("buildingName"),
                         floor = json.get("floor"),
                         room = json.get("room"),
-                        post_code = json.get("postCode")
+                        post_code = json.get("postCode"),
+                        prefecture_id = json.get("businessId")
                     )
                     new_business.password_hash=json.get("newPassword")
                     db.session.add(new_business)
