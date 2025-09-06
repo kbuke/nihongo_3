@@ -16,6 +16,8 @@ from resources.Cities import CitiesList
 
 from resources.Neighbourhoods import NeighbourhoodsList
 
+from resources.Interests import TravelInterestList
+
 api.add_resource(UserList, "/users")
 api.add_resource(User, "/users/<int:id>")
 api.add_resource(BusinessList, "/businesses")
@@ -38,6 +40,8 @@ api.add_resource(Prefecture, "/prefectures/<int:id>")
 api.add_resource(CitiesList, "/cities")
 
 api.add_resource(NeighbourhoodsList, "/neighbourhoods")
+
+api.add_resource(TravelInterestList, "/interests")
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
